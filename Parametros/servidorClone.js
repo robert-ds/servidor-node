@@ -6,16 +6,21 @@ var fs = require('fs');
 		function arrancaServidor(requiere, respuesta){
 			var ruta = url.parse(requiere.url).pathname;
 
+			if(ruta == "/"){
+				ruta = "index.html";
+			}
+
 			console.log("Alguien se ha Conectado");
+			//var contenido = enrutar(manejador, ruta, respuesta);
+			var index = fs.readFileSync("www/" + ruta);
 			
 			var registro = fs.createWriteStream('registro.txt',{'flags':'a'});
 			registro.write(ruta + '\n');
 
-			var contenido = enrutar(manejador, ruta, respuesta);
 
-			/* respuesta.writeHead(200,"{Content-type:text/html}");
-			respuesta.write(contenido);
-			respuesta.end(); */
+			respuesta.writeHead(200,"{Content-type:text/html}");
+			respuesta.write(index);
+			respuesta.end(); 
 		}
 		servidor.createServer(arrancaServidor).listen(8080);
 	}
